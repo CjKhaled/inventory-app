@@ -1,0 +1,164 @@
+<div class="col-10 mt-3 pb-5 ms-auto overflow-y-auto" style="height: 100vh;">
+    <h1 class="text-center mb-5">Dashboard</h1>
+    <div class="container-fluid">
+        <div class="d-flex flex-row flex-wrap gap-5 justify-content-center">
+            <div class="card text-bg-success p-3">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <%= stats.totalItems %>
+                    </h3>
+                    <p class="card-text">
+                        total items in inventory
+                    </p>
+                </div>
+            </div>
+            <div class="card text-bg-success p-3">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        $<%= stats.totalCost %>
+                    </h3>
+                    <p class="card-text">
+                        total inventory worth
+                    </p>
+                </div>
+            </div>
+            <div class="card text-bg-warning p-3">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <%= stats.lowStockItems %>
+                    </h3>
+                    <p class="card-text">
+                        items low in stock
+                    </p>
+                </div>
+            </div>
+            <div class="card text-bg-danger p-3">
+                <div class="card-body">
+                    <h3 class="card-title">
+                        <%= stats.outOfStockItems %>
+                    </h3>
+                    <p class="card-text">
+                        items out of stock
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="text-center my-5">Analytics</h2>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6" id="item-graph"></div>
+            <div class="col-6" id="value-graph"></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Highcharts.chart('item-graph', {
+                colors: ['#01BAF2', '#f6fa4b', '#FAA74B', '#baf201', '#f201ba'],
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Distribution Of Inventory Items'
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}: {point.percentage:.1f}%'
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [
+                    {
+                        name: 'Percentage',
+                        colorByPoint: true,
+                        data: [
+                            {
+                                name: 'Meat',
+                                y: <%= stats.databasePercentages[0] %>
+                            },
+                            {
+                                name: 'Produce',
+                                y: <%= stats.databasePercentages[1] %>
+                            },
+                            {
+                                name: 'Beverages',
+                                y: <%= stats.databasePercentages[2] %>
+                            },
+                            {
+                                name: 'Household',
+                                y: <%= stats.databasePercentages[3] %>
+                            },
+                            {
+                                name: 'Junk',
+                                y: <%= stats.databasePercentages[4] %>
+                            }
+                        ]
+                    }
+                ]
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Highcharts.chart('value-graph', {
+                colors: ['#01BAF2', '#f6fa4b', '#FAA74B', '#baf201', '#f201ba'],
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Distribution Of Inventory Value'
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}: {point.percentage:.1f}%'
+                        },
+                        showInLegend: true
+                    }
+                },
+                series: [
+                    {
+                        name: 'Percentage',
+                        colorByPoint: true,
+                        data: [
+                            {
+                                name: 'Meat',
+                                y: <%= stats.valuePercentages[0] %>
+                            },
+                            {
+                                name: 'Produce',
+                                y: <%= stats.valuePercentages[1] %>
+                            },
+                            {
+                                name: 'Beverages',
+                                y: <%= stats.valuePercentages[2] %>
+                            },
+                            {
+                                name: 'Household',
+                                y: <%= stats.valuePercentages[3] %>
+                            },
+                            {
+                                name: 'Junk',
+                                y: <%= stats.valuePercentages[4] %>
+                            }
+                        ]
+                    }
+                ]
+            });
+        });
+    </script>
+</div>

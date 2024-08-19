@@ -1,0 +1,17 @@
+<div class="col-10 mt-3 pb-5 ms-auto overflow-y-auto" style="height: 100vh;">
+    <h1 class="text-center mb-3">Items</h1>
+    <div class="container-fluid">
+        <div class="d-flex flex-row flex-wrap gap-5 justify-content-center">
+            <% items.forEach((item) => { %>
+                <div class="card p-3" style="width: 18rem;">
+                    <div class="card-body">
+                        <h3 class="card-title"><%= item.name %></h3>
+                        <h6 class="card-subtitle <%= item.count == 0 ? 'text-danger' : (item.count < 8 ? 'text-warning' : '') %>"><%= item.count %> in stock</h6>
+                        <p class="card-text"><%= item.desc %></p>
+                        <a href="#" class="btn btn-primary">View details</a>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</div>
