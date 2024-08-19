@@ -5,31 +5,27 @@ const { body, validationResult } = require("express-validator");
 const validateUser = [];
 
 async function getDashboard(req, res) {
-  res.send("This should be dashboard");
-}
-
-async function getItems(req, res) {
-  res.send("This should be all items in database");
+  res.render('index', {currentPage: 'dashboard'});
 }
 
 async function getMeat(req, res) {
-  res.send("These should be all meat in database");
+  res.render("index", { currentPage: "meat" });
 }
 
 async function getProduce(req, res) {
-  res.send("These should be all produce in database");
+  res.render("index", { currentPage: "produce" });
 }
 
 async function getBeverages(req, res) {
-  res.send("These should be all beverages in database");
+  res.render("index", { currentPage: "beverages" });
 }
 
 async function getHousehold(req, res) {
-  res.send("These should be all household in database");
+  res.render("index", { currentPage: "household" });
 }
 
 async function getJunk(req, res) {
-  res.send("These should be all junk in database");
+  res.render("index", { currentPage: "junk" });
 }
 
 async function addItem(req, res) {
@@ -43,7 +39,6 @@ async function addItem(req, res) {
 
 module.exports = {
   getDashboard,
-  getItems,
   getMeat,
   getProduce,
   getBeverages,

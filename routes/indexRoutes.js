@@ -3,7 +3,6 @@ const controller = require("../controllers/indexController");
 const router = express.Router();
 
 router.get('/', controller.getDashboard)
-router.get('/items', controller.getItems)
 router.get('/meat', controller.getMeat)
 router.get('/produce', controller.getProduce)
 router.get('/beverages', controller.getBeverages)

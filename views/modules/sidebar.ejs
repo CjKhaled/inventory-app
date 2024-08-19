@@ -1,0 +1,28 @@
+<div class="col-2 text-bg-dark p-3">
+  <h2 class="mb-4">Food Inventory</h2>
+  <ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+      <a href="/" aria-current="page" class="nav-link <%= currentPage === 'dashboard' ? 'active' : '' %>">Dashboard</a>
+    </li>
+    <h3 class="my-4">Categories</h3>
+    <li class="nav-item">
+      <a href="/meat" id="meat" class="nav-link <%= currentPage === 'meat' ? 'active' : '' %>">Meat</a>
+    </li>
+    <li class="nav-item">
+      <a href="/produce" id="produce" class="nav-link <%= currentPage === 'produce' ? 'active' : '' %>">Produce</a>
+    </li>
+    <li class="nav-item">
+      <a href="/beverages" id="beverages" class="nav-link <%= currentPage === 'beverages' ? 'active' : '' %>">Beverages</a>
+    </li>
+    <li class="nav-item">
+      <a href="/household" id="household" class="nav-link <%= currentPage === 'household' ? 'active' : '' %>">Household</a>
+    </li>
+    <li class="nav-item">
+      <a href="/junk" id="junk" class="nav-link <%= currentPage === 'junk' ? 'active' : '' %>">Junk</a>
+    </li>
+    <h3 class="my-4">Add</h3>
+    <li class="nav-item">
+      <a href="#" class="nav-link">New Item</a>
+    </li>
+  </ul>
+</div>
