@@ -17,11 +17,14 @@
             <% if (currentPage === 'dashboard') { %>
                 <%- include('./modules/dashboard', { stats: stats }) %>
             <% } else if (currentPage === 'form') { %>
-                <%- include('./modules/form') %>
+                <%- include('./modules/form', { action: action, category: category, name: name, price: price, serving: serving, size: size, count: count }) %>
+            <% } else if (currentPage === 'item') { %>
+                <%- include('./modules/item', { item: item }) %>
             <% } else { %>
-                <%- include('./modules/items', { items: items }) %>
+                <%- include('./modules/items', { items: items, category: currentPage }) %>
             <% } %>
         </div>
+        
     </div>
 </body>
 </html>

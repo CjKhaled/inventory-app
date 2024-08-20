@@ -9,5 +9,7 @@ router.get('/beverages', controller.getBeverages)
 router.get('/household', controller.getHousehold)
 router.get('/junk', controller.getJunk)
 router.get('/new', controller.getForm)
+router.get('/:category/:itemID', controller.getSingleItem)
+router.get('/update/:category/:name/:price/:serving/:size/:count', controller.getUpdateForm)
 
 module.exports = router

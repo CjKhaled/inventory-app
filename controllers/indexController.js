@@ -5,45 +5,62 @@ const { body, validationResult } = require("express-validator");
 const validateUser = [];
 
 // test databases
+// desc should be serving size instead
 const meatdb = [
-  { id: 0, name: "Chicken", desc: "12 oz of chicken", price: 12, count: 14 },
-  { id: 1, name: "Steak", desc: "16 oz of steak", price: 22, count: 3 },
-  { id: 2, name: "Shrimp", desc: "20 oz of shrimp", price: 16, count: 18 },
-  { id: 3, name: "Ground Beef", desc: "12 oz of ground beef", price: 12, count: 32 },
-  { id: 4, name: "Ham", desc: "16 oz of ham", price: 14, count: 26 },
+  { id: 0, name: "Chicken", serving: 12, size: 'oz', price: 12, count: 14 },
+  { id: 1, name: "Steak", serving: 16, size: 'oz', price: 22, count: 3 },
+  { id: 2, name: "Shrimp", serving: 20, size: 'oz', price: 16, count: 18 },
+  { id: 3, name: "Ground Beef", serving: 12, size: 'oz', price: 12, count: 32 },
+  { id: 4, name: "Ham", serving: 16, size: 'oz', price: 14, count: 26 },
 ];
 
 const producedb = [
-  { id: 0, name: "Apples", desc: "1 lb of apples", price: 3, count: 0 },
-  { id: 1, name: "Bananas", desc: "1 bunch of bananas", price: 2, count: 15 },
-  { id: 2, name: "Carrots", desc: "1 lb of carrots", price: 4, count: 10 },
-  { id: 3, name: "Lettuce", desc: "1 head of lettuce", price: 2, count: 8 },
-  { id: 4, name: "Tomatoes", desc: "1 lb of tomatoes", price: 5, count: 12 },
+  { id: 0, name: "Apples", serving: 1, size: 'lb', price: 3, count: 0 },
+  { id: 1, name: "Bananas", serving: 1, size: 'bunch', price: 2, count: 15 },
+  { id: 2, name: "Carrots", serving: 1, size: 'lb', price: 4, count: 10 },
+  { id: 3, name: "Lettuce", serving: 1, size: 'head', price: 2, count: 8 },
+  { id: 4, name: "Tomatoes", serving: 1, size: 'lb', price: 5, count: 12 },
 ];
 
 const beveragesdb = [
-  { id: 0, name: "Coca-Cola", desc: "12-pack of Coca-Cola", price: 8, count: 10 },
-  { id: 1, name: "Orange Juice", desc: "1 gallon of orange juice", price: 6, count: 5 },
-  { id: 2, name: "Milk", desc: "1 gallon of milk", price: 4, count: 7 },
-  { id: 3, name: "Water", desc: "24-pack of bottled water", price: 10, count: 20 },
-  { id: 4, name: "Coffee", desc: "1 lb of ground coffee", price: 12, count: 6 },
+  { id: 0, name: "Coca-Cola", serving: 12, size: 'pack', price: 8, count: 10 },
+  { id: 1, name: "Orange Juice", serving: 1, size: 'gallon', price: 6, count: 5 },
+  { id: 2, name: "Milk", serving: 1, size: 'gallon', price: 4, count: 7 },
+  { id: 3, name: "Water", serving: 24, size: 'pack', price: 10, count: 20 },
+  { id: 4, name: "Coffee", serving: 1, size: 'lb', price: 12, count: 6 },
 ];
 
 const householddb = [
-  { id: 0, name: "Toilet Paper", desc: "24-pack of toilet paper", price: 15, count: 12 },
-  { id: 1, name: "Paper Towels", desc: "6-pack of paper towels", price: 10, count: 8 },
-  { id: 2, name: "Dish Soap", desc: "1 bottle of dish soap", price: 3, count: 14 },
-  { id: 3, name: "Laundry Detergent", desc: "1 gallon of laundry detergent", price: 12, count: 6 },
-  { id: 4, name: "Garbage Bags", desc: "50-count of garbage bags", price: 8, count: 10 },
+  { id: 0, name: "Toilet Paper", serving: 24, size: 'pack', price: 15, count: 12 },
+  { id: 1, name: "Paper Towels", serving: 6, size: 'pack', price: 10, count: 8 },
+  { id: 2, name: "Dish Soap", serving: 1, size: 'bottle', price: 3, count: 14 },
+  { id: 3, name: "Laundry Detergent", serving: 1, size: 'gallon', price: 12, count: 6 },
+  { id: 4, name: "Garbage Bags", serving: 50, size: 'count', price: 8, count: 10 },
 ];
 
 const junkdb = [
-  { id: 0, name: "Chips", desc: "1 bag of potato chips", price: 3, count: 20 },
-  { id: 1, name: "Candy Bars", desc: "5-pack of candy bars", price: 5, count: 15 },
-  { id: 2, name: "Cookies", desc: "1 box of cookies", price: 4, count: 12 },
-  { id: 3, name: "Ice Cream", desc: "1 quart of ice cream", price: 6, count: 0 },
-  { id: 4, name: "Soda", desc: "2-liter bottle of soda", price: 2, count: 25 },
+  { id: 0, name: "Chips", serving: 1, size: 'bag', price: 3, count: 20 },
+  { id: 1, name: "Candy Bars", serving: 5, size: 'pack', price: 5, count: 15 },
+  { id: 2, name: "Cookies", serving: 1, size: 'box', price: 4, count: 12 },
+  { id: 3, name: "Ice Cream", serving: 1, size: 'quart', price: 6, count: 0 },
+  { id: 4, name: "Soda", serving: 2, size: 'liter', price: 2, count: 25 },
 ];
+
+function getDatabase(query) {
+  if (query === "meat") {
+    return meatdb;
+  } else if (query === "produce") {
+    return producedb;
+  } else if (query === "beverages") {
+    return beveragesdb;
+  } else if (query === "household") {
+    return householddb;
+  } else if (query === "junk") {
+    return junkdb;
+  } else {
+    return null; // or you could return an empty array if no match is found
+  }
+}
 
 function getInventoryStats(databases) {
   let totalItems = 0;
@@ -123,7 +140,19 @@ async function getJunk(req, res) {
 }
 
 function getForm(req, res) {
-  res.render('index', { currentPage: 'form' })
+  res.render('index', { currentPage: 'form', action: 'new', category: null, name: null, price: null, serving: null, size: null, count: null })
+}
+
+function getUpdateForm(req, res) {
+  const { category, name, price, serving, size, count } = req.params
+  res.render('index', { currentPage: 'form', action: 'update', category: category, name: name, price: price, serving: serving, size: size, count: count })
+}
+
+async function getSingleItem(req, res) {
+  const category = req.params.category
+  const itemID = parseInt(req.params.itemID)
+  const item = getDatabase(category)[itemID]
+  res.render('index', { currentPage: 'item', item: item, category: category })
 }
 
 async function addItem(req, res) {
@@ -143,5 +172,7 @@ module.exports = {
   getHousehold,
   getJunk,
   getForm,
+  getUpdateForm,
+  getSingleItem,
   addItem,
 };
