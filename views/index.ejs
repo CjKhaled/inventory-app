@@ -16,6 +16,8 @@
             <%- include('./modules/sidebar', { currentPage: currentPage }) %>
             <% if (currentPage === 'dashboard') { %>
                 <%- include('./modules/dashboard', { stats: stats }) %>
+            <% } else if (currentPage === 'form') { %>
+                <%- include('./modules/form') %>
             <% } else { %>
                 <%- include('./modules/items', { items: items }) %>
             <% } %>

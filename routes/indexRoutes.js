@@ -8,5 +8,6 @@ router.get('/produce', controller.getProduce)
 router.get('/beverages', controller.getBeverages)
 router.get('/household', controller.getHousehold)
 router.get('/junk', controller.getJunk)
+router.get('/new', controller.getForm)
 
 module.exports = router

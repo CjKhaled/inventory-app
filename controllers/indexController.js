@@ -122,6 +122,10 @@ async function getJunk(req, res) {
   res.render("index", { currentPage: "junk", items: junkdb });
 }
 
+function getForm(req, res) {
+  res.render('index', { currentPage: 'form' })
+}
+
 async function addItem(req, res) {
   const itemName = req.body.itemName;
   const itemNumber = req.body.itemNumber;
@@ -138,5 +142,6 @@ module.exports = {
   getBeverages,
   getHousehold,
   getJunk,
+  getForm,
   addItem,
 };
