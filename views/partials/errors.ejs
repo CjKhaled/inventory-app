@@ -1,0 +1,10 @@
+<% if (locals.errors) {%>
+    <div class="d-flex flex-column gap-3">
+      <% errors.forEach(function(error) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= error.msg %>
+            <button class="btn-close" aria-label="close" data-bs-dismiss="alert"></button>
+        </div>
+      <% }); %>
+      </div>
+<% } %>

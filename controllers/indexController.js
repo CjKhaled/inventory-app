@@ -1,8 +1,58 @@
 const { body, validationResult } = require("express-validator");
 
 // error messages
+const itemNameLengthError = 'item name must be between 1-30 characters.'
+const itemNameError = 'item name must only contain letters.'
+const itemNameEmptyError = 'must provide an item name.'
 
-const validateUser = [];
+const priceRangeError = 'price must be an integer between $1-$10,000.'
+const priceEmptyError = 'must provide a price.'
+
+const servingSizeRangeError = 'serving size must be an integer between 1-50'
+const servingSizeEmptyError = 'must provide serving size.'
+
+const unitEmptyError = 'must provide unit.'
+
+const numItemsRangeError = 'number of items must be an integer between 0-10,000'
+const numItemsEmptyError = 'must provide number of items.'
+
+const categoryEmptyError = 'must provide category.'
+
+const validateFormInput = [
+  body("itemName")
+    .trim()
+    .notEmpty()
+    .withMessage(itemNameEmptyError)
+    .isLength({ min: 1, max: 30 })
+    .withMessage(itemNameLengthError)
+    .isAlpha()
+    .withMessage(itemNameError),
+
+  body("price")
+    .trim()
+    .notEmpty()
+    .withMessage(priceEmptyError)
+    .isInt({ min: 1, max: 10000 })
+    .withMessage(priceRangeError),
+
+  body("serving")
+    .trim()
+    .notEmpty()
+    .withMessage(servingSizeEmptyError)
+    .isInt({ min: 1, max: 50 })
+    .withMessage(servingSizeRangeError),
+
+  body("size").trim().notEmpty().withMessage(unitEmptyError),
+
+  body("count")
+    .trim()
+    .notEmpty()
+    .withMessage(numItemsEmptyError)
+    .isInt({ min: 0, max: 10000 })
+    .withMessage(numItemsRangeError),
+
+  body("category").trim().notEmpty().withMessage(categoryEmptyError),
+];
 
 // test databases
 // desc should be serving size instead
@@ -155,14 +205,32 @@ async function getSingleItem(req, res) {
   res.render('index', { currentPage: 'item', item: item, category: category })
 }
 
-async function addItem(req, res) {
-  const itemName = req.body.itemName;
-  const itemNumber = req.body.itemNumber;
-  const itemPrice = req.body.itemPrice;
-  const itemCategory = req.body.itemCategory;
+const postNewItem = [validateFormInput, async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).render('index', { errors: errors.array(), currentPage: 'form', action: 'new', category: null, name: null, price: null, serving: null, size: null, count: null })
+  }
 
-  // if already in database, just update existing item
-}
+  // no errors
+  const { itemName, itemNumber, itemPrice, itemCategory } = req.body;
+  console.log(itemName, itemNumber, itemPrice, itemCategory);
+  res.redirect("/");
+}]
+
+const postUpdatedItem = [validateFormInput, async (req, res) => {
+  const { category, name, price, serving, size, count } = req.params;
+  if (!errors.isEmpty()) {
+    return res.status(400).render('index', { errors: errors.array(), currentPage: 'form', action: 'update',  category: category, name: name, price: price, serving: serving, size: size, count: count })
+  }
+
+  // imagine that there is a function here
+  // it returns a boolean that determines whether or not it can find
+  // an item in the database that's equal to name, serving, size, and category
+
+  // handle finding or not finding the item here
+  console.log(category, name, price, serving, size, count);
+  res.redirect('/')
+}]
 
 module.exports = {
   getDashboard,
@@ -174,5 +242,6 @@ module.exports = {
   getForm,
   getUpdateForm,
   getSingleItem,
-  addItem,
+  postNewItem,
+  postUpdatedItem
 };
