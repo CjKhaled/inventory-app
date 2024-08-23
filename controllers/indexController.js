@@ -273,8 +273,6 @@ async function getSingleItem(req, res) {
   res.render("index", { currentPage: "item", item: item, category: category });
 }
 
-async function deleteItem(req, res) {}
-
 const postNewItem = [
   validateFormInput,
   async (req, res) => {
@@ -329,9 +327,24 @@ const postUpdatedItem = [
 
     // handle finding or not finding the item here
     console.log(category, itemName, price, serving, size, count);
-    res.redirect("/");
+    res.redirect("/?success=true&method=update");
   },
 ];
+
+async function deleteItem(req, res) {
+  const masterKey = "odin123"
+  const userInput = req.body.masterKey
+  const { category, itemID } = req.params
+  if (masterKey === userInput) {
+    // go into database and delete item, if we can find it
+    console.log('item category: ', category)
+    console.log('item id: ', itemID)
+    return res.redirect("/?success=true&method=delete")
+  }
+
+  // password is wrong or item doesn't exist in database
+  res.redirect("/?success=false&method=delete")
+}
 
 module.exports = {
   getDashboard,
@@ -345,4 +358,5 @@ module.exports = {
   getSingleItem,
   postNewItem,
   postUpdatedItem,
+  deleteItem
 };

@@ -1,5 +1,23 @@
 <div class="col-10 mt-3 pb-5 ms-auto overflow-y-auto" style="height: 100vh">
   <h1 class="text-center mb-5"><%= item.name %></h1>
+  <div class="modal" id="confirmModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Confirmation</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-target="#confirmModal"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/delete/<%= category %>/<%= item.id %>" id="deleteForm" method="post" novalidate>
+            <label for="masterKey" class="form-label">Please enter the master key.</label>
+            <input type="password" class="form-control" id="masterKey" name="masterKey" minlength="1" maxlength="10" required>
+            <div class="invalid-feedback">Provide a password.</div>
+            <button type="submit" class="btn btn-danger mt-3">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="container-fluid">
     <div class="d-flex flex-row flex-wrap gap-5 justify-content-center">
       <div class="card text-bg-primary p-3" style="width: 20rem">
@@ -34,7 +52,17 @@
         class="btn btn-primary"
         >Edit item</a
       >
-      <a href="#" role="button" class="btn btn-danger">Delete item</a>
+      <button data-bs-toggle="modal" data-bs-target="#confirmModal" role="button" class="btn btn-danger">Delete item</button>
     </div>
   </div>
 </div>
+<script>
+  const deleteForm = document.querySelector('form#deleteForm')
+  deleteForm.addEventListener('submit', e => {
+    if (!deleteForm.checkValidity()) {
+      e.preventDefault()
+    }
+
+    deleteForm.classList.add('was-validated')
+  })
+</script>

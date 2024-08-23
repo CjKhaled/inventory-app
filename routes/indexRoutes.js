@@ -20,5 +20,6 @@ router.post(
   "/update/:category/:name/:price/:serving/:size/:count",
   controller.postUpdatedItem
 );
+router.post('/delete/:category/:itemID', controller.deleteItem)
 
 module.exports = router;

@@ -1,26 +1,28 @@
-<% if (success === 'true') {%>
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-  <div
-    id="liveToast"
-    class="toast text-bg-success show"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-  >
-    <div class="toast-header">
-      <strong class="me-auto">Database Updated</strong>
-      <small>Just now</small>
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="toast"
-        aria-label="Close"
-      ></button>
-    </div>
-    <div class="toast-body">
-      <%= locals.method === "new" ? "Successfully added new item!" :
-      "Successfully updated an item!" %>
+<% if (success) { %>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div
+      id="liveToast"
+      class="toast text-bg-<%= success === 'true' ? 'success' : 'danger' %> show"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto">Database <%= success === 'true' ? "Updated" : "Not Updated" %></strong>
+        <small>Just now</small>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body">
+        <%= locals.method === "new" ? (success === 'true' ? "Successfully added new item!" : "Failed to add new item!") :
+        locals.method === "update" ? (success === 'true' ? "Successfully updated an item!" : "Failed to update an item!") :
+        locals.method === "delete" ? (success === 'true' ? "Successfully deleted an item!" : "Failed to delete an item!") :
+        "An unknown action was performed." %>
+      </div>
     </div>
   </div>
-</div>
-<% } %>
+  <% } %>
