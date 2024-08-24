@@ -64,9 +64,9 @@
                 </div>
             </form>
         <% } else { %>
-            <form action="/update/:name/:price/:serving/:size/:count" id="update-form" method="post" style="width: 500px;" novalidate>
+            <form action="/update/<%= category %>/<%= name %>/<%= price %>/<%= serving %>/<%= size %>/<%= count %>" id="update-form" method="post" style="width: 500px;" novalidate>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" value="<%= name %>" id="itemName" name="itemName" placeholder="Milk" minlength="1" maxlength="30" required disabled>
+                    <input type="text" class="form-control" value="<%= name %>" id="itemName" name="itemName" placeholder="Milk" minlength="1" maxlength="30" required readonly>
                     <label for="itemName">Item Name</label>
                     <div class="invalid-feedback">Must provide item name.</div>
                 </div>
@@ -80,12 +80,12 @@
                 </div>
                 <div class="input-group mb-3">
                     <div class="form-floating">
-                        <input type="number" min="1" max="50" class="form-control" value="<%= serving %>" id="serving" name="serving" placeholder="Number of items" min="1" max="10000" disabled>
+                        <input type="number" min="1" max="50" class="form-control" value="<%= serving %>" id="serving" name="serving" placeholder="Number of items" min="1" max="10000" readonly>
                         <label for="serving">Serving Size</label>
                         <div class="invalid-feedback">Must provide serving size.</div>
                     </div>
                     <div class="form-floating">
-                        <select name="size" id="size" class="form-select" required disabled>
+                        <select name="size" id="size" class="form-select" required readonly>
                             <option value="oz" <%= size === 'oz' ? 'selected' : '' %>>oz</option>
                             <option value="lb" <%= size === 'lb' ? 'selected' : '' %>>lb</option>
                             <option value="gal" <%= size === 'gal' ? 'selected' : '' %>>gal</option>
@@ -109,7 +109,7 @@
                     <div class="invalid-feedback">Must provide the number of items.</div>
                 </div>
                 <div class="form-floating mb-3">
-                    <select class="form-select" id="category" name="category" required disabled>
+                    <select class="form-select" id="category" name="category" required readonly>
                         <option value="meat" <%= category === 'meat' ? 'selected' : '' %>>Meat</option>
                         <option value="produce" <%= category === 'produce' ? 'selected' : '' %>>Produce</option>
                         <option value="beverages" <%= category === 'beverages' ? 'selected' : '' %>>Beverages</option>
@@ -129,11 +129,23 @@
     const newForm = document.querySelector('form#new-form')
     const updateForm = document.querySelector('form#update-form')
 
-    newForm.addEventListener('submit', e => {
-        if (!newForm.checkValidity()) {
-            e.preventDefault()
-        }
+    if (newForm) {
+        newForm.addEventListener('submit', e => {
+            if (!newForm.checkValidity()) {
+                e.preventDefault()
+            }
 
-        newForm.classList.add('was-validated')
-    })
+            newForm.classList.add('was-validated')
+        })
+    }
+
+    if (updateForm) {
+        updateForm.addEventListener('submit', e => {
+            if (!updateForm.checkValidity()) {
+                e.preventDefault()
+            }
+
+            updateForm.classList.add('was-validated')
+        })
+    }
 </script>

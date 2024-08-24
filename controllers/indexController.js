@@ -1,4 +1,5 @@
 const { body, validationResult } = require("express-validator");
+const db = require('../db/queries')
 
 // error messages
 const itemNameLengthError = "item name must be between 1-30 characters.";
@@ -55,98 +56,41 @@ const validateFormInput = [
   body("category").trim().notEmpty().withMessage(categoryEmptyError),
 ];
 
-// test databases
-// desc should be serving size instead
-const meatdb = [
-  { id: 0, name: "Chicken", serving: 12, size: "oz", price: 12, count: 14 },
-  { id: 1, name: "Steak", serving: 16, size: "oz", price: 22, count: 3 },
-  { id: 2, name: "Shrimp", serving: 20, size: "oz", price: 16, count: 18 },
-  { id: 3, name: "Ground Beef", serving: 12, size: "oz", price: 12, count: 32 },
-  { id: 4, name: "Ham", serving: 16, size: "oz", price: 14, count: 26 },
-];
+const validateUpdateFormInput = [
+  body("itemName")
+    .trim()
+    .notEmpty()
+    .withMessage(itemNameEmptyError)
+    .isLength({ min: 1, max: 30 })
+    .withMessage(itemNameLengthError)
+    .isAlpha()
+    .withMessage(itemNameError),
 
-const producedb = [
-  { id: 0, name: "Apples", serving: 1, size: "lb", price: 3, count: 0 },
-  { id: 1, name: "Bananas", serving: 1, size: "bunch", price: 2, count: 15 },
-  { id: 2, name: "Carrots", serving: 1, size: "lb", price: 4, count: 10 },
-  { id: 3, name: "Lettuce", serving: 1, size: "head", price: 2, count: 8 },
-  { id: 4, name: "Tomatoes", serving: 1, size: "lb", price: 5, count: 12 },
-];
+  body("price")
+    .trim()
+    .notEmpty()
+    .withMessage(priceEmptyError)
+    .isInt({ min: 1, max: 10000 })
+    .withMessage(priceRangeError),
 
-const beveragesdb = [
-  { id: 0, name: "Coca-Cola", serving: 12, size: "pack", price: 8, count: 10 },
-  {
-    id: 1,
-    name: "Orange Juice",
-    serving: 1,
-    size: "gallon",
-    price: 6,
-    count: 5,
-  },
-  { id: 2, name: "Milk", serving: 1, size: "gallon", price: 4, count: 7 },
-  { id: 3, name: "Water", serving: 24, size: "pack", price: 10, count: 20 },
-  { id: 4, name: "Coffee", serving: 1, size: "lb", price: 12, count: 6 },
-];
+  body("serving")
+    .trim()
+    .notEmpty()
+    .withMessage(servingSizeEmptyError)
+    .isInt({ min: 1, max: 50 })
+    .withMessage(servingSizeRangeError),
 
-const householddb = [
-  {
-    id: 0,
-    name: "Toilet Paper",
-    serving: 24,
-    size: "pack",
-    price: 15,
-    count: 12,
-  },
-  {
-    id: 1,
-    name: "Paper Towels",
-    serving: 6,
-    size: "pack",
-    price: 10,
-    count: 8,
-  },
-  { id: 2, name: "Dish Soap", serving: 1, size: "bottle", price: 3, count: 14 },
-  {
-    id: 3,
-    name: "Laundry Detergent",
-    serving: 1,
-    size: "gallon",
-    price: 12,
-    count: 6,
-  },
-  {
-    id: 4,
-    name: "Garbage Bags",
-    serving: 50,
-    size: "count",
-    price: 8,
-    count: 10,
-  },
-];
+  body("size").trim().notEmpty().withMessage(unitEmptyError),
 
-const junkdb = [
-  { id: 0, name: "Chips", serving: 1, size: "bag", price: 3, count: 20 },
-  { id: 1, name: "Candy Bars", serving: 5, size: "pack", price: 5, count: 15 },
-  { id: 2, name: "Cookies", serving: 1, size: "box", price: 4, count: 12 },
-  { id: 3, name: "Ice Cream", serving: 1, size: "quart", price: 6, count: 0 },
-  { id: 4, name: "Soda", serving: 2, size: "liter", price: 2, count: 25 },
-];
+  body("count")
+    .trim()
+    .notEmpty()
+    .withMessage(numItemsEmptyError)
+    .isInt({ min: 0, max: 10000 })
+    .withMessage(numItemsRangeError),
 
-function getDatabase(query) {
-  if (query === "meat") {
-    return meatdb;
-  } else if (query === "produce") {
-    return producedb;
-  } else if (query === "beverages") {
-    return beveragesdb;
-  } else if (query === "household") {
-    return householddb;
-  } else if (query === "junk") {
-    return junkdb;
-  } else {
-    return null; // or you could return an empty array if no match is found
-  }
-}
+  body("category").trim().notEmpty().withMessage(categoryEmptyError),
+];
 
 function getInventoryStats(databases) {
   let totalItems = 0;
@@ -156,7 +100,6 @@ function getInventoryStats(databases) {
   let databasePercentages = [];
   let valuePercentages = [];
 
-  // First, calculate the total stock and total value across all databases
   databases.forEach((db) => {
     db.forEach((item) => {
       totalItems += item.count;
@@ -164,7 +107,7 @@ function getInventoryStats(databases) {
       if (item.count === 0) {
         outOfStockItems++;
       } else if (item.count < 5) {
-        // Assuming low stock is defined as less than 5
+        // Low stock can be defined as any number, it's 5 here
         lowStockItems++;
       }
 
@@ -196,11 +139,9 @@ function getInventoryStats(databases) {
   };
 }
 
-// Example usage:
-const allDatabases = [meatdb, producedb, beveragesdb, householddb, junkdb];
-const inventoryStats = getInventoryStats(allDatabases);
-
 async function getDashboard(req, res) {
+  const allDatabases = await db.getAllItems();
+  const inventoryStats = getInventoryStats(allDatabases);
   const { success, method } = req.query;
   if (success && method) {
     return res.render("index", {
@@ -220,22 +161,27 @@ async function getDashboard(req, res) {
 }
 
 async function getMeat(req, res) {
+  const meatdb = await db.getCategoryData('meat')
   res.render("index", { currentPage: "meat", items: meatdb });
 }
 
 async function getProduce(req, res) {
+  const producedb = await db.getCategoryData('produce')
   res.render("index", { currentPage: "produce", items: producedb });
 }
 
 async function getBeverages(req, res) {
+  const beveragesdb = await db.getCategoryData('beverages')
   res.render("index", { currentPage: "beverages", items: beveragesdb });
 }
 
 async function getHousehold(req, res) {
+  const householddb = await db.getCategoryData('household')
   res.render("index", { currentPage: "household", items: householddb });
 }
 
 async function getJunk(req, res) {
+  const junkdb = await db.getCategoryData('junk')
   res.render("index", { currentPage: "junk", items: junkdb });
 }
 
@@ -269,8 +215,12 @@ function getUpdateForm(req, res) {
 async function getSingleItem(req, res) {
   const category = req.params.category;
   const itemID = parseInt(req.params.itemID);
-  const item = getDatabase(category)[itemID];
-  res.render("index", { currentPage: "item", item: item, category: category });
+  const item = await db.getItem(category, itemID);
+  if (!item) {
+    // bad input
+    return res.redirect("/?success=false&method=unknown")
+  }
+  res.render("index", { currentPage: "item", item: item[0], category: category });
 }
 
 const postNewItem = [
@@ -293,18 +243,21 @@ const postNewItem = [
         });
     }
 
-    // no errors
-    const { itemName, price, serving, size, count, category } = req.body;
-    console.log(itemName, price, serving, size, count, category);
+    const { itemName, serving, size, price, count, category } = req.body;
+    const result = await db.insertItem(itemName, serving, size, price, count, category)
+    if (!result) {
+      res.redirect("/?success=true&method=new")
+    }
+
     res.redirect("/?success=true&method=new");
   },
 ];
 
 const postUpdatedItem = [
-  validateFormInput,
+  validateUpdateFormInput,
   async (req, res) => {
-    // should be form, not req params
-    const { itemName, price, serving, size, count, category } = req.body;
+    const { itemName, serving, size, price, count, category } = req.body;
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res
         .status(400)
@@ -321,28 +274,25 @@ const postUpdatedItem = [
         });
     }
 
-    // imagine that there is a function here
-    // it returns a boolean that determines whether or not it can find
-    // an item in the database that's equal to name, serving, size, and category
-
-    // handle finding or not finding the item here
-    console.log(category, itemName, price, serving, size, count);
+    const result = await db.updateItem(itemName, serving, size, price, count, category)
+    if (!result) {
+      res.redirect("/?success=false&method=update")
+    }
     res.redirect("/?success=true&method=update");
   },
 ];
 
 async function deleteItem(req, res) {
-  const masterKey = "odin123"
   const userInput = req.body.masterKey
   const { category, itemID } = req.params
-  if (masterKey === userInput) {
-    // go into database and delete item, if we can find it
-    console.log('item category: ', category)
-    console.log('item id: ', itemID)
-    return res.redirect("/?success=true&method=delete")
+  if (process.env.MASTERKEY === userInput) {
+    const result = await db.deleteItem(category, itemID)
+    if (result) {
+      return res.redirect("/?success=true&method=delete")
+    }
   }
 
-  // password is wrong or item doesn't exist in database
+  // password is wrong
   res.redirect("/?success=false&method=delete")
 }
 
