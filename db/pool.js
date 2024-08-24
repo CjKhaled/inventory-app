@@ -1,10 +1,10 @@
 const { Pool } = require('pg')
-// const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
+const { DATABASE_HOST, DATABASE_USER, DATABASE_PASS, DATABASE_NAME } = process.env;
 
-// if (!PGHOST || !PGDATABASE || !PGUSER || !PGPASSWORD) {
-//   throw new Error("Database connection environment variables are not set.");
-// }
+if (!DATABASE_HOST || !DATABASE_USER || !DATABASE_PASS || !DATABASE_NAME) {
+  throw new Error("Database connection environment variables are not set.");
+}
 
 module.exports = new Pool({
-  connectionString: `postgresql://odinproject:odin123@localhost:5432/inventory_database`
+  connectionString: `postgresql://${DATABASE_USER}:${DATABASE_PASS}@${DATABASE_HOST}/${DATABASE_NAME}?sslmode=require?sslmode=require`
 });
