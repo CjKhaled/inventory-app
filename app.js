@@ -23,4 +23,4 @@ app.use(express.urlencoded({ extended: true }));
 // index routes
 app.use("/", indexRouter);
 
-app.listen(3000, () => console.log(`server listening on port 3000!`));
+app.listen(8000, () => console.log(`server listening on port 8000!`));
